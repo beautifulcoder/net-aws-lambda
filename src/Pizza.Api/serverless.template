@@ -11,7 +11,8 @@
         "Handler": "Pizza.Api",
         "Runtime": "dotnet6",
         "CodeUri": "",
-        "MemorySize": 256,
+        "MemorySize": 2048,
+        "Architectures": ["arm64"],
         "Timeout": 30,
         "Role": null,
         "Policies": [

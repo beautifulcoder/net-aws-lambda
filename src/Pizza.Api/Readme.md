@@ -12,7 +12,7 @@ Lambda function handler value is set to the .NET Assembly name. This is differen
 
 To deploy as an executable assembly the Lambda runtime client must be started to listen for incoming events to process. For an ASP.NET Core application the Lambda runtime client is started by included the
 `Amazon.Lambda.AspNetCoreServer.Hosting` NuGet package and calling `AddAWSLambdaHosting(LambdaEventSource.HttpApi)` passing in the event source while configuring the services of the application. The
-event source can be API Gateway REST API and HTTP API or Application Load Balancer.  
+event source can be API Gateway REST API and HTTP API or Application Load Balancer.
 
 ### Project Files ###
 
@@ -45,19 +45,44 @@ If already installed check if new version is available.
 ```
 
 Deploy application
+
 ```
     cd "Pizza.Api/src/Pizza.Api"
-    dotnet lambda deploy-serverless
+    dotnet lambda deploy-serverless --stack-name pizza-api --s3-bucket pizza-api-upload
 ```
 
+Create a new project
 ```shell
 > dotnet new serverless.AspNetCoreMinimalAPI -n Pizza.Api --profile default --region us-east-1
 > dotnet new xunit -n Pizza.Api.Tests
 ```
 
+Create S3 bucket
+
 ```shell
 > aws s3api create-bucket --acl private --bucket pizza-api-upload --region us-east-1 --object-ownership BucketOwnerEnforced
 > aws s3api put-public-access-block --bucket pizza-api-upload --public-access-block-configuration "BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=true,RestrictPublicBuckets=true"
-> aws iam put-role-policy --role-name pizza-api-executor --policy-name PizzaApiDynamoDB --policy-document file://./roles/dynamodb.json
-> aws dynamodb create-table --table-name pizzas --attribut e-definitions AttributeName=url,AttributeType=S --key-schema AttributeName=url,KeyType=HASH --provisioned-throughput ReadCapacityUnits=1,WriteCapacityUnits=1 --region us-east-1 --query TableDescription.TableArn --output text
+```
+
+Create DynamoDB table
+
+```
+> aws dynamodb create-table --table-name pizzas --attribute-definitions AttributeName=url,AttributeType=S --key-schema AttributeName=url,KeyType=HASH --provisioned-throughput ReadCapacityUnits=1,WriteCapacityUnits=1 --region us-east-1 --query TableDescription.TableArn --output text
+```
+
+Create DynamoDB role policy
+
+```
+> aws iam put-role-policy --role-name pizza-api-AspNetCoreFunctionRole-818HE2VECU1J --policy-name PizzaApiDynamoDB --policy-document file://./dynamodb.json
+```
+
+Make pizza
+
+```
+> curl -X POST -i -H "Accept: application/json" -H "Content-Type: application/json" -d "{\"name\":\"Pepperoni Pizza\",\"ingredients\":[\"tomato sauce\",\"cheese\",\"pepperoni\"]}" http://localhost:5095/pizzas
+```
+Taste pizza
+
+```
+> curl -X GET -i -H "Accept: application/json" http://localhost:5095/pizzas/pepperoni-pizza
 ```
