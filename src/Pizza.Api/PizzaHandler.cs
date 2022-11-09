@@ -1,7 +1,4 @@
-﻿using Amazon.DynamoDBv2.DataModel;
-using Slugify;
-
-namespace Pizza.Api;
+﻿namespace Pizza.Api;
 
 public class PizzaHandler
 {

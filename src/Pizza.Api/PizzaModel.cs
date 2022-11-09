@@ -1,6 +1,4 @@
-﻿using Amazon.DynamoDBv2.DataModel;
-
-namespace Pizza.Api;
+﻿namespace Pizza.Api;
 
 [DynamoDBTable("pizzas")]
 public class PizzaModel

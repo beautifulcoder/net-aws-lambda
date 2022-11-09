@@ -1,9 +1,3 @@
-using Amazon;
-using Amazon.DynamoDBv2;
-using Amazon.DynamoDBv2.DataModel;
-using Pizza.Api;
-using Slugify;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.

@@ -1,8 +1,4 @@
-﻿using Amazon.DynamoDBv2.DataModel;
-using Microsoft.Extensions.Logging;
-using Slugify;
-
-namespace Pizza.Api.Tests;
+﻿namespace Pizza.Api.Tests;
 
 public class PizzaHandlerTests
 {
